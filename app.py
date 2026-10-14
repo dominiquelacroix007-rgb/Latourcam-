@@ -1,19 +1,19 @@
 import os
-import subprocess
+import urllib.request
 import cv2
 import numpy as np
 import streamlit as st
 import insightface
 from insightface.app import FaceAnalysis
 
-# 1. On s'assure que le modèle est téléchargé EN PREMIER
+# Téléchargement automatique et propre du modèle de face swap s'il n'est pas présent
 NOM_DU_MODELE = "inswapper_128.onnx"
 if not os.path.exists(NOM_DU_MODELE):
-    print("⏳ Téléchargement du modèle IA inswapper_128.onnx...")
+    st.info("⏳ Téléchargement du modèle IA en cours, veuillez patienter quelques secondes...")
     URL = "https://huggingface.co/ezioruan/inswapper_128.onnx/resolve/main/inswapper_128.onnx"
-    subprocess.run(f"wget -q -O {NOM_DU_MODELE} {URL}", shell=True)
+    urllib.request.urlretrieve(URL, NOM_DU_MODELE)
 
-# 2. Ensuite seulement, on initialise l'application
+# Initialisation de l'analyseur de visage
 app = FaceAnalysis(name="buffalo_l", providers=['CPUExecutionProvider'])
 app.prepare(ctx_id=0, det_size=(640, 640))
 swapper = insightface.model_zoo.get_model(NOM_DU_MODELE, providers=['CPUExecutionProvider'])
@@ -25,9 +25,9 @@ target_file = st.file_uploader("Choisissez l'image cible", type=["jpg", "jpeg", 
 
 if source_file and target_file:
     st.write("Traitement en cours...")
-    # Conversion des images
+    
     source_bytes = np.asarray(bytearray(source_file.read()), dtype=np.uint8)
-    source_cv = cv2.imdecode(source_bytes, 1.7)
+    source_cv = cv2.imdecode(source_bytes, 1)
     
     target_bytes = np.asarray(bytearray(target_file.read()), dtype=np.uint8)
     target_cv = cv2.imdecode(target_bytes, 1)
