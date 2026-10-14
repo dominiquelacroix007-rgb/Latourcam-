@@ -1,13 +1,2 @@
 streamlit
-torch
-torchvision
-torchaudio
 opencv-python-headless
-numpy
-insightface
-onnxruntime-gpu
-diffusers
-transformers
-accelerate
-librosa
-soundfile
