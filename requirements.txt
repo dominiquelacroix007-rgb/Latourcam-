@@ -1,0 +1,6 @@
+gradio
+insightface==0.7.3
+onnxruntime
+opencv-python
+ffmpeg-python
+gdown
